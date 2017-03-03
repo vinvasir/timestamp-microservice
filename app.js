@@ -7,8 +7,24 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 var validateDate = function(dateString) {
-	let dateFormat = "MMM DD, YYYY";
-	return moment(dateString, dateFormat, true).isValid();
+	let dateFormats = [
+		"MMM DD, YYYY",
+		"DD MMM, YYYY",
+		"MMMM DD, YYYY",
+		"DD MMMM, YYYY",
+		"YYYY MMMM DD",
+		"YYYY MMM DD"
+	];
+
+	var anyValidDates = false;
+
+	dateFormats.forEach(dateFormat => {
+		if(moment(dateString, dateFormat, true).isValid()) {
+			anyValidDates = true;
+		}
+	});
+
+	return anyValidDates;
 };
 
 app.use(logger('dev'));
