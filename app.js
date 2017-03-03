@@ -3,7 +3,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = process.env.NODE_ENV || 3000;
+const port = process.env.PORT || 3000;
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -14,7 +14,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/:string', (req, res) => {
-	res.send(req.params.string);
+	res.status(200).json({
+		string: req.params.string
+	});
 });
 
 app.listen(port, () => {
