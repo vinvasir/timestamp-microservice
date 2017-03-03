@@ -6,7 +6,7 @@ const moment = require('moment');
 const app = express();
 const port = process.env.PORT || 3000;
 
-var validateDate = function(dateString) {
+const validateDate = function(dateString) {
 	let dateFormats = [
 		"MMM DD, YYYY",
 		"DD MMM, YYYY",
@@ -38,7 +38,8 @@ app.get('/', (req, res) => {
 app.get('/:string', (req, res) => {
 	if(validateDate(req.params.string)){
 		res.status(200).json({
-			string: req.params.string
+			unix: moment(req.params.string).unix(),
+			natural: req.params.string
 		});		
 	} else {
 		res.status(404).json({
