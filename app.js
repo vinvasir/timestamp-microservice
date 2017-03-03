@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
 	console.log(req.body);
-	
+
 	if(validateDate(req.body.date_string)){
 		res.status(200).json({
 			unix: moment(req.body.date_string).unix(),
@@ -53,11 +53,11 @@ app.post('/', (req, res) => {
 	}
 });
 
-app.get('/:string', (req, res) => {
-	if(validateDate(req.params.string)){
+app.get('/:date_string', (req, res) => {
+	if(validateDate(req.params.date_string)){
 		res.status(200).json({
-			unix: moment(req.params.string).unix(),
-			natural: req.params.string
+			unix: moment(req.params.date_string).unix(),
+			natural: req.params.date_string
 		});		
 	} else {
 		res.status(404).json({
