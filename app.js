@@ -1,9 +1,15 @@
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const moment = require('moment');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+var validateDate = function(dateString) {
+	let dateFormat = "MMM DD, YYYY";
+	return moment(dateString, dateFormat, true).isValid();
+};
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -14,9 +20,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/:string', (req, res) => {
-	res.status(200).json({
-		string: req.params.string
-	});
+	if(validateDate(req.params.string)){
+		res.status(200).json({
+			string: req.params.string
+		});		
+	} else {
+		res.status(404).json({
+			error: "Invalid date format"
+		});
+	}
 });
 
 app.listen(port, () => {
