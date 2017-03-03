@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const moment = require('moment');
@@ -27,12 +28,29 @@ const validateDate = function(dateString) {
 	return anyValidDates;
 };
 
+app.use(express.static(path.resolve(__dirname, 'public')));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/', (req, res) => {
-	res.send('Hello world!');
+	res.sendfile('index.html');
+});
+
+app.post('/', (req, res) => {
+	console.log(req.body);
+	
+	if(validateDate(req.body.date_string)){
+		res.status(200).json({
+			unix: moment(req.body.date_string).unix(),
+			natural: req.body.date_string
+		});			
+	} else {
+		res.status(404).json({
+			error: "Invalid date format"
+		});
+	}
 });
 
 app.get('/:string', (req, res) => {
@@ -46,6 +64,10 @@ app.get('/:string', (req, res) => {
 			error: "Invalid date format"
 		});
 	}
+});
+
+app.use((req, res, next) => {
+	res.redirect('/');
 });
 
 app.listen(port, () => {
